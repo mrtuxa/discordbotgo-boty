@@ -1,7 +1,3 @@
-
-# Discord Bot written in Golang
-
-
 # Discord Bot written in Golang
 
 [![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](https://go.dev/)
