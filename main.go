@@ -2,34 +2,45 @@ package main
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
-	ready "github.com/mrtuxa/discordbotgo-boty/events"
-	"github.com/mrtuxa/discordbotgo-boty/utils/merror"
+	"github.com/mrtuxa/discordbotgo-boty/utils/webinterface"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/bwmarrin/discordgo"
+	ready "github.com/mrtuxa/discordbotgo-boty/events"
+	"github.com/mrtuxa/discordbotgo-boty/utils/merror"
 
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	err := godotenv.Load()
-	if err != nil {
-
-	}
 	merror.CheckFatal(err, "GoDotenv", "Can't load environment")
 
 	envToken := os.Getenv("TOKEN")
+	portWebinterface := os.Getenv("WEBINTERFACE_PORT")
 
 	if envToken == "" {
 		os.Exit(1)
 	}
-	token := "Bot" + envToken
+
+	fmt.Println("Port")
+	fmt.Println(portWebinterface)
+
+	if len(portWebinterface) == 0 {
+		fmt.Println("using Default Port 2103")
+		portWebinterface = "2103"
+	}
+
+	webinterface.Start(portWebinterface)
+
+	token := "Bot " + envToken
 
 	client, err := discordgo.New(token)
 	merror.DisGoClientError(err)
 
-	client.AddHandler(ready.ReadyFunc)
+	client.AddHandler(ready.Func)
 	client.Identify.Intents = discordgo.IntentsAll
 
 	err = client.Open()
